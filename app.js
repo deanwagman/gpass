@@ -75,10 +75,6 @@ function getAccount(accountName) {
 	var accounts = storage.getItemSync('accounts');
 	var matchedAccount;
 
-	if (!accountName || !accounts || typeof accounts !== 'object') {
-		return console.error('There was a problem accessing accounts');
-	}
-
 	accounts.forEach(account => {
 		if (account.name === accountName) matchedAccount = account;
 	});
@@ -88,10 +84,16 @@ function getAccount(accountName) {
 
 if (command === 'get') {
 	var account = getAccount(argv.name);
-	if (account) console.log(`Username: ${account.username} Password: ${account.password}`);
+	if (account) {
+		console.log(`Username: ${account.username} Password: ${account.password}`);
+	} else {
+		console.error('ACCOUNT NOT FOUND');
+	}
 } else if (command === 'create') {
 	var newAccount = createAccount(argv.name, argv.username, argv.password);
-	if (newAccount) console.log(`Account for ${newAccount.name} created. Username: ${newAccount.username} Password: ${newAccount.password}`);
+	if (newAccount) {
+		console.log(`Account for ${newAccount.name} created. Username: ${newAccount.username} Password: ${newAccount.password}`);
+	}
 }
 
 
