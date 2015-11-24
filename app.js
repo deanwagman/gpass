@@ -57,7 +57,8 @@ var argv = require('yargs')
 			.help('help')
 			.argv;
 var command = argv._[0];
-var storage = require('node-persist').initSync();
+var storage = require('node-persist');
+	storage.initSync();
 var crypto = require('crypto-js');
 
 //    __________________   ___   ________________  __  ___   _____________
@@ -134,22 +135,33 @@ function getAccount(accountName, masterPassword) {
 //  / /  / / ___ |_/ // /|  /  
 // /_/  /_/_/  |_/___/_/ |_/                         
 if (command === 'get') {
-	var account = getAccount(argv.name, argv.master);
-	if (account) {
-		console.log(`Username: ${account.username} Password: ${account.password}`);
-	} else {
-		console.error('ACCOUNT NOT FOUND');
+	try {
+		var account = getAccount(argv.name, argv.master);
+		if (account) {
+			console.log(`Username: ${account.username} Password: ${account.password}`);
+		} else {
+			console.error('ACCOUNT NOT FOUND');
+		}
+	} catch(error) {
+		console.error(`Unable to get account:`);
+		console.error(error);
 	}
 } else if (command === 'create') {
-	var newAccount = {
-		name: argv.name, 
-		username: argv.username,
-		password: argv.password
-	};
-	newAccount = createAccount(newAccount, argv.master);
-	if (newAccount) {
-		console.log(`Account for ${newAccount.name} created. Username: ${newAccount.username} Password: ${newAccount.password}`);
+	try {
+		var newAccount = {
+			name: argv.name, 
+			username: argv.username,
+			password: argv.password
+		};
+		newAccount = createAccount(newAccount, argv.master);
+		if (newAccount) {
+			console.log(`Account for ${newAccount.name} created. Username: ${newAccount.username} Password: ${newAccount.password}`);
+		}
+	} catch(error) {
+		console.error(`Unable to create account:`);
+		console.error(error);
 	}
+
 }
 
 
